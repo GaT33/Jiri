@@ -7,9 +7,8 @@
     <groupId>ro.tuiasi</groupId>
     <artifactId>PipProject</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>PipProject</name>
-    <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
+
+
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -24,5 +23,207 @@
             <version>4.12</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+            <plugins>
+                <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.0.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.0.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.5.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                </plugin>
+                <!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.7.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <!-- PIPpr plugin // se adauga in build -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>3.2.1</version>
+                    <configuration>
+                        <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                        <consoleOutput>true</consoleOutput>
+                        <failsOnError>false</failsOnError>
+                        <linkXRef>true</linkXRef>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>validate</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.4.1</version>
+                    <configuration>
+                        <show>private</show>
+                        <nohelp>false</nohelp>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <version>3.20.0</version>
+                    <configuration>
+                        <linkXRef>true</linkXRef>
+                        <rulesets>
+                            <ruleset>/category/java/bestpractices.xml</ruleset>
+                            <ruleset>/category/java/codestyle.xml/</ruleset>
+                            <ruleset>/category/java/documentation.xml/</ruleset>
+                            <ruleset>/category/java/errorprone.xml/</ruleset>
+                            <ruleset>/category/java/performance.xml/</ruleset>
+                        </rulesets>
+                        <failOnViolation>true</failOnViolation>
+                        <printFailingErrors>true</printFailingErrors>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.8.8</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>generate-code-coverage-report</id>
+                            <phase>test</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- PIPpr end plugin-->
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <!-- PIPpr // se adauga distinct dupa build -->
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.2.1</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>checkstyle</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.4.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.20.0</version>
+                <configuration>
+                    <linkXRef>true</linkXRef>
+                    <inputEncoding>utf-8</inputEncoding>
+                    <minimumTokens>100</minimumTokens>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>pmd</report>
+                            <report>cpd</report>
+                        </reports>
+                    </reportSet>
+                    <reportSet>
+                        <id>aggregate</id>
+                        <inherited>false</inherited>
+                        <reports>
+                            <report>aggregate-pmd</report>
+                            <report>aggregate-cpd</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>3.0.0-M8</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.3</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.8</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <name>PipProject</name>
+    <!-- FIXME change it to the project's website -->
+    <url>http://www.example.com</url>
 
 </project>
