@@ -72,7 +72,6 @@
                     <artifactId>maven-project-info-reports-plugin</artifactId>
                     <version>3.0.0</version>
                 </plugin>
-                <!-- PIPpr plugin // se adauga in build -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
@@ -146,12 +145,11 @@
                         </execution>
                     </executions>
                 </plugin>
-                <!-- PIPpr end plugin-->
+
             </plugins>
         </pluginManagement>
     </build>
 
-    <!-- PIPpr // se adauga distinct dupa build -->
     <reporting>
         <plugins>
             <plugin>
