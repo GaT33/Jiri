@@ -1,9 +1,18 @@
 package ro.tuiasi;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        System.out.printf("Here we go.");
+        AudioRecorder recorder = new AudioRecorder();
+        recorder.startRecording("Record.wav");
+
+        // Record 3 seconds
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        recorder.stopRecording();
+        System.out.println("Recording stopped.");
     }
 }
