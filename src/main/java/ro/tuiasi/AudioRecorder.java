@@ -2,20 +2,19 @@ package ro.tuiasi;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
-
 import javax.sound.sampled.*;
-import java.io.*;
+
 
 public class AudioRecorder {
 
-    AudioFormat format = new AudioFormat(44100.00F, 16, 2, true, false);
+    AudioFormat format = new AudioFormat(
+            44100.00F,
+            16,
+            2,
+            true,
+            false);
 
     TargetDataLine microphone;
 
@@ -43,12 +42,12 @@ public class AudioRecorder {
                 try (AudioInputStream audioStream = new AudioInputStream(microphone)) {
                     File wavFile = new File(filename);
                     AudioSystem.write(audioStream, AudioFileFormat.Type.WAVE, wavFile);
-                } catch (IOException e) {
+                } catch (NullPointerException |IOException e) {
                     e.printStackTrace();
                 }
             });
             recordingThread.start();
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             e.printStackTrace();
         }
     }
