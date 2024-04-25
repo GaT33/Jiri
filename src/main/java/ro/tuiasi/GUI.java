@@ -200,6 +200,7 @@ public class GUI {
             else if (!Character.isLetterOrDigit(c)) hasSpecial = true;
         }
 
+
         return hasUpper && hasLower && hasNumber && hasSpecial;
     }
 }
