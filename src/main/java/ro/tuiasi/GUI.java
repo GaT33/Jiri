@@ -37,7 +37,7 @@ public class GUI {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-
+//a
     private void initializeGUI() {
 
         ImageIcon imageIcon = new ImageIcon(getClass().getClassLoader().getResource("future-of-AI (1).png"));
