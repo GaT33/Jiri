@@ -3,16 +3,15 @@ package ro.tuiasi;
 public class Main {
     public static void main(String[] args) {
         AudioRecorder recorder = new AudioRecorder();
-        recorder.startRecording("Record.wav");
+        System.out.println("Recording started.");
+        recorder.startRecording("AudioRecord.wav");
 
-        // Record 3 seconds
         try {
-            Thread.sleep(3000);
+            recorder.recordingThread.join();  // wait for thread to stop
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            System.out.println("Recording interrupted.");
         }
-
-        recorder.stopRecording();
-        System.out.println("Recording stopped.");
+        System.out.println("Recording stopped and saved to your file.");
     }
 }
+
