@@ -1,68 +1,33 @@
 package ro.tuiasi;
 
-import java.util.ArrayList;
-import java.util.List;
-import com.theokanning.openai.completion.chat.ChatCompletionRequest;
-import com.theokanning.openai.completion.chat.ChatMessage;
-import com.theokanning.openai.service.*;
-import com.theokanning.openai.client.*;
-import com.theokanning.openai.completion.*;
-import com.theokanning.openai.completion.chat.*;
-import com.theokanning.openai.service.FunctionExecutor;
 import com.theokanning.openai.service.OpenAiService;
 
-import io.reactivex.Flowable;
-
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 public class Main {
-    public static void main(String... args) {
-      //implementare conexiunea API + streaming (consola) mai trebuie speech ul
-        OpenAiService service = new OpenAiService("cheie Token");
+    public static void main(String[] args) {
+        //1 record alex
+        //bla bla.. blabla
 
-        List<ChatMessage> messages = new ArrayList<>();
-        ChatMessage systemMessage = new ChatMessage(ChatMessageRole.SYSTEM.value(), "You are an assistant.");
-        messages.add(systemMessage);
+        //2 conectare API
+        OpenAiService service = new OpenAiService;
 
-        System.out.print("First Query: ");
-        Scanner scanner = new Scanner(System.in);
-        ChatMessage firstMsg = new ChatMessage(ChatMessageRole.USER.value(), scanner.nextLine());
-        messages.add(firstMsg);
+        //3 transcription
+        AudioTxt transcriptionHandler = new AudioTxt(service);
+        String transcribedText = transcriptionHandler.transcribeAudio();
 
-        while (true) {
-            ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
-                    .builder()
-                    .model("gpt-3.5-turbo-0613")
-                    .messages(messages)
-                    .n(1)
-                    .maxTokens(256)
-                    .build();
-            Flowable<ChatCompletionChunk> flowable = service.streamChatCompletion(chatCompletionRequest);
-
-            AtomicBoolean isFirst = new AtomicBoolean(true);
-            ChatMessage chatMessage = service.mapStreamToAccumulator(flowable)
-                    .doOnNext(accumulator -> {
-                        if (isFirst.getAndSet(false)) {
-                            System.out.print("Response: ");
-                        }
-                        if (accumulator.getMessageChunk().getContent() != null) {
-                            System.out.print(accumulator.getMessageChunk().getContent());
-                        }
-                    })
-                    .doOnComplete(System.out::println)
-                    .lastElement()
-                    .blockingGet()
-                    .getAccumulatedMessage();
-            messages.add(chatMessage); // don't forget to update the conversation with the latest response
-
-            System.out.print("Next Query: ");
-            String nextLine = scanner.nextLine();
-            if (nextLine.equalsIgnoreCase("exit")) {
-                scanner.close();
-                break;
-            }
-            messages.add(new ChatMessage(ChatMessageRole.USER.value(), nextLine));
+        //4 speech
+        TxtAudio chatAndSpeechHandler = new TxtAudio(service);
+        try {
+            chatAndSpeechHandler.handleChatAndSpeech(transcribedText);
+            //4.1 play audio
+            chatAndSpeechHandler.playAudioFile("src/speechMerge2.mp3");
+        } catch (Exception e) {
+            System.out.println("Eroare la redarea fișierului audio: " + e.getMessage());
         }
-    }
 
+        //5 pozicaaa
+        ImageGPT imageHandler = new ImageGPT(service);
+        String taskImagine="horse dancing";//accepta numa engleza
+        imageHandler.createAndDownloadImage(taskImagine);
+
+    }
 }
