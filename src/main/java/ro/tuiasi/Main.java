@@ -17,6 +17,8 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 public class Main {
     public static void main(String... args) {
+
+        //Nu trebuia dat push in master, clean-up
       //implementare conexiunea API + streaming (consola) mai trebuie speech ul
         OpenAiService service = new OpenAiService("cheie Token");
 
