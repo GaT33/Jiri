@@ -1,22 +1,8 @@
 package ro.tuiasi;
 
-import java.util.ArrayList;
-import java.util.List;
-import com.theokanning.openai.completion.chat.ChatCompletionRequest;
-import com.theokanning.openai.completion.chat.ChatMessage;
-import com.theokanning.openai.service.*;
-import com.theokanning.openai.client.*;
-import com.theokanning.openai.completion.*;
-import com.theokanning.openai.completion.chat.*;
-import com.theokanning.openai.service.FunctionExecutor;
-import com.theokanning.openai.service.OpenAiService;
-
-import io.reactivex.Flowable;
-
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 public class Main {
     public static void main(String... args) {
+
 
         //Nu trebuia dat push in master, clean-up
       //implementare conexiunea API + streaming (consola) mai trebuie speech ul
@@ -57,14 +43,6 @@ public class Main {
                     .getAccumulatedMessage();
             messages.add(chatMessage); // don't forget to update the conversation with the latest response
 
-            System.out.print("Next Query: ");
-            String nextLine = scanner.nextLine();
-            if (nextLine.equalsIgnoreCase("exit")) {
-                scanner.close();
-                break;
-            }
-            messages.add(new ChatMessage(ChatMessageRole.USER.value(), nextLine));
-        }
     }
 
 }
