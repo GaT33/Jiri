@@ -1,83 +1,74 @@
 package ro.tuiasi;
 
-import javazoom.jl.player.Player;//imi trebuie,aia e
+import com.theokanning.openai.image.CreateImageRequest;
+import com.theokanning.openai.image.Image;
+
 
 import java.io.*;
 import java.util.*;
 import java.nio.file.*;
 import okhttp3.*;
 
-import com.theokanning.openai.OpenAiHttpException;
-import com.theokanning.openai.audio.CreateSpeechRequest;
-import com.theokanning.openai.completion.chat.*;
 import com.theokanning.openai.service.OpenAiService;
+
 
 public class Main {
     public static void main(String[] args) {
-        //conexiune + mesaj openAI
-        List<ChatMessage> messages = new ArrayList<>();
-        messages.add(new ChatMessage("system", "You are a helpful assistant."));
-        messages.add(new ChatMessage("user", "da mi bani"));
-
-        OpenAiService service = new OpenAiService;//aici pui tu cheia ("")
-        ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
-                .messages(messages)
-                .model("gpt-3.5-turbo-1106")
+        //conexiune
+        OpenAiService service = new OpenAiService();//aici pui tu cheia ("")
+        //creare imagine+ parametrii
+        CreateImageRequest request = CreateImageRequest.builder()
+                .prompt("horse fighting")//Extra tip , nu accepta prompt uri in romana
+                .n(1) // Number of images to generate
+                .size("1024x1024") // Size of the generated images
+                .user("example_user") // User identifier
                 .build();
 
-        List<ChatCompletionChoice> responses = service.createChatCompletion(chatCompletionRequest).getChoices();
-        responses.forEach(response -> {
-            System.out.println(response);
+        //VARIANTA 1 ne da linkuri pt https
+//        List<Image> images = service.createImage(request).getData();
+//        for (int i = 0; i < images.size(); i++) {
+//            System.out.println(images.get(i).getUrl());
+//        }
 
-        });
+        //VARIANTA 2 download format jpg
+        List<Image> images = service.createImage(request).getData();
 
-        //speech parametrii openAI
-        CreateSpeechRequest speechRequest = CreateSpeechRequest.builder()
-                .model("tts-1")
-                .input(responses.toString())
-                .voice("alloy")
-                .responseFormat("mp3")
-                .speed(1.0)
-                .build();
 
-        try {
-            // Realizeaza cererea si primește răspunsul ca un flux de bytes
-            ResponseBody responseBody = service.createSpeech(speechRequest);
+        for (int i = 0; i < images.size(); i++) {
+            if (!images.isEmpty() && images.get(0).getUrl() != null) {
+                String imageUrl = images.get(0).getUrl();
+                System.out.println("Generated Image URL: " + imageUrl);
 
-            //teste
-            if (responseBody != null) {
-                // Calea unde vrei sa salvezi fișierul audio
-                Path output = Paths.get("src/speechMerge2.mp3");
+                // Download and save the image as a JPEG file
 
-                // Scrie fluxul de bytes în fișierul de la calea specificată
-                try (InputStream inputStream = responseBody.byteStream()) {
-                    Files.copy(inputStream, output);
-                    System.out.println("Fișierul audio a fost salvat cu succes la: " + output);
+                try {
+                    OkHttpClient client = new OkHttpClient();
+                    Request downloadRequest = new Request.Builder().url(imageUrl).build();
+                    Response response = client.newCall(downloadRequest).execute();
+
+                    if (response.isSuccessful() && response.body() != null) {
+                        // Get the input stream of the image data
+                        InputStream inputStream = response.body().byteStream();
+
+                        // Define the path where the image will be saved
+                        Path imagePath = Paths.get("downloaded_image.jpg");
+
+                        // Use Files.copy to write the InputStream to a file
+                        Files.copy(inputStream, imagePath, StandardCopyOption.REPLACE_EXISTING);
+                        System.out.println("Image has been saved as JPEG at: " + imagePath.toString());
+
+                        inputStream.close(); // Close the stream
+                    } else {
+                        System.out.println("Failed to download the image.");
+                    }
+                    response.close(); // Close the response to free resources
                 } catch (IOException e) {
-                    System.out.println("Eroare la scrierea fișierului: " + e.getMessage());
+                    System.out.println("An error occurred while downloading or saving the image: " + e.getMessage());
                 }
             } else {
-                System.out.println("Răspunsul este null, verifică cererea trimisă.");
+                System.out.println("No images were generated or URL is missing.");
             }
-        } catch (OpenAiHttpException e) {
 
-            System.out.println("HTTP Status Code: " + e.statusCode);
-            System.out.println("OpenAI Error Code: " + e.code);
-            System.out.println("Error Parameter: " + e.param);
-            System.out.println("Error Type: " + e.type);
-            System.out.println("Error Message: " + e.getMessage());
-        }
-
-        //aici se realizeaza play ul
-        try {
-
-            FileInputStream fis = new FileInputStream("src/speechMerge2.mp3");
-            Player playMP3 = new Player(fis);
-
-            playMP3.play();
-
-        } catch (Exception e) {
-            System.out.println(e);
         }
     }
 }
