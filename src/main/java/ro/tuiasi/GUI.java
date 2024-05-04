@@ -2,6 +2,8 @@ package ro.tuiasi;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -73,6 +75,14 @@ public class GUI {
         signUpButton.setBackground(new Color(108, 117, 125)); // Set a custom background color
         signUpButton.setForeground(Color.WHITE); // Set text color to white
         formPanel.add(signUpButton);
+
+        signUpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.setVisible(false);
+                new InterfataChat();
+            }
+        });
 
         // Pictograma Facebook
         ImageIcon originalFacebookIcon = new ImageIcon(getClass().getClassLoader().getResource("fb_Img_11apr.png"));
