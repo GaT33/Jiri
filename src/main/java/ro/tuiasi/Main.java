@@ -11,6 +11,9 @@ import com.theokanning.openai.OpenAiHttpException;
 import com.theokanning.openai.audio.CreateSpeechRequest;
 import com.theokanning.openai.completion.chat.*;
 import com.theokanning.openai.service.OpenAiService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
@@ -25,16 +28,20 @@ public class Main {
                 .model("gpt-3.5-turbo-1106")
                 .build();
 
+
         List<ChatCompletionChoice> responses = service.createChatCompletion(chatCompletionRequest).getChoices();
         responses.forEach(response -> {
-            System.out.println(response);
+            System.out.println(responses);
 
         });
+        String textForSpeech = responses.stream()
+                .map(choice -> choice.getMessage().getContent())
+                .collect(Collectors.joining(" "));
 
         //speech parametrii openAI
         CreateSpeechRequest speechRequest = CreateSpeechRequest.builder()
                 .model("tts-1")
-                .input(responses.toString())
+                .input(textForSpeech)
                 .voice("alloy")
                 .responseFormat("mp3")
                 .speed(1.0)
