@@ -5,24 +5,24 @@ import javazoom.jl.player.Player;//imi trebuie,aia e
 import java.io.*;
 import java.util.*;
 import java.nio.file.*;
+import java.util.stream.Collectors;
+
 import okhttp3.*;
 
 import com.theokanning.openai.OpenAiHttpException;
 import com.theokanning.openai.audio.CreateSpeechRequest;
 import com.theokanning.openai.completion.chat.*;
 import com.theokanning.openai.service.OpenAiService;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 public class Main {
     public static void main(String[] args) {
         //conexiune + mesaj openAI
         List<ChatMessage> messages = new ArrayList<>();
         messages.add(new ChatMessage("system", "You are a helpful assistant."));
-        messages.add(new ChatMessage("user", "da mi bani"));
+        messages.add(new ChatMessage("user", "vreau sa ma faci rege"));
 
-        OpenAiService service = new OpenAiService;//aici pui tu cheia ("")
+        OpenAiService service = new OpenAiService();//aici pui tu cheia ("")
         ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
                 .messages(messages)
                 .model("gpt-3.5-turbo-1106")
@@ -82,7 +82,8 @@ public class Main {
             Player playMP3 = new Player(fis);
 
             playMP3.play();
-
+            playMP3.close();
+            Files.delete(Paths.get("src/speechMerge2.mp3"));//nu merge sa l suprascrii asa ca efectiv il sterf si recreez cu acelasi nume
         } catch (Exception e) {
             System.out.println(e);
         }
