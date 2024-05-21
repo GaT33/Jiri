@@ -1,6 +1,8 @@
 package ro.tuiasi;
 
 import com.theokanning.openai.audio.CreateSpeechRequest;
+import com.theokanning.openai.audio.CreateTranscriptionRequest;
+import com.theokanning.openai.audio.TranscriptionResult;
 import com.theokanning.openai.completion.chat.ChatCompletionChoice;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatMessage;
@@ -12,7 +14,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import org.easymock.EasyMoc
+import org.easymock.EasyMock;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
