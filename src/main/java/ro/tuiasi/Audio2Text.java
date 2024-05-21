@@ -9,15 +9,19 @@ import java.io.File;
 /**
  * The AudioTxt class provides functionality for transcribing audio files using the OpenAiService.
  */
-public class AudioTxt {
-    private OpenAiService service;
+public class Audio2Text {
+
+    /**
+     *  The OpenAiService instance used for transcribing audio.
+     */
+    private final OpenAiService service;
 
     /**
      * Constructs an AudioTxt object with the specified OpenAiService.
      *
      * @param service The OpenAiService instance used for transcribing audio.
      */
-    public AudioTxt(OpenAiService service) {
+    public Audio2Text(OpenAiService service) {
         this.service = service;
     }
 
@@ -39,8 +43,6 @@ public class AudioTxt {
         // Request transcription from the OpenAiService
         TranscriptionResult transcriptionResult = service.createTranscription(transcriptionRequest, audioFile);
 
-        // Print and return the transcribed text
-        System.out.println(transcriptionResult.getText());
         return transcriptionResult.getText();
     }
 }

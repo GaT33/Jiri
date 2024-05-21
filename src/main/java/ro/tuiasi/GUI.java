@@ -1,6 +1,8 @@
 package ro.tuiasi;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import com.theokanning.openai.service.OpenAiService;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
@@ -107,6 +109,7 @@ public class GUI {
             isClicked = true;
             if (validateFields(keyTextField, emailTextField, passwordField)) {
                 frame.setVisible(false);
+                Main.service=new OpenAiService(keyTextField.getText());
                 new InterfataChat();
             }
         });

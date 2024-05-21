@@ -74,7 +74,7 @@ public class AudioRecorder {
                     }
 
                     if (isSilent(buffer, numBytesRead)) {
-                        if (System.currentTimeMillis() - lastSoundTime > 1500) { // 1.5 seconds waiting for silence
+                        if (System.currentTimeMillis() - lastSoundTime > 2500) { // 2.5 seconds waiting for silence
                             break;
                         }
                     } else {
@@ -101,7 +101,7 @@ public class AudioRecorder {
      */
     private boolean isSilent(byte[] buffer, int numBytesRead) {
         double rms = calculateRMS(buffer, numBytesRead);
-        return rms < 8.5;  // RMS threshold for silence
+        return rms < 15;  // RMS threshold for silence
     }
 
     /**
