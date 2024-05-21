@@ -8,7 +8,7 @@ public class Main {
         //bla bla.. blabla
 
         //2 conectare API
-        OpenAiService service = new OpenAiService;
+        OpenAiService service = new OpenAiService("");
 
         //3 transcription
         AudioTxt transcriptionHandler = new AudioTxt(service);

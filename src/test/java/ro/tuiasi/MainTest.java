@@ -5,6 +5,7 @@ import com.theokanning.openai.audio.CreateTranscriptionRequest;
 import com.theokanning.openai.audio.TranscriptionResult;
 import com.theokanning.openai.completion.chat.ChatCompletionChoice;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
+import com.theokanning.openai.completion.chat.ChatCompletionResult;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.image.CreateImageRequest;
 import com.theokanning.openai.image.Image;
@@ -14,6 +15,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import okhttp3.*;
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.*;
 
@@ -64,10 +66,13 @@ class MainTest {
         TranscriptionResult mockResult = EasyMock.createMock(TranscriptionResult.class);
         EasyMock.expect(mockResult.getText()).andReturn(expectedTranscription);
 
+        OpenAiService mockService = EasyMock.createMock(OpenAiService.class); // Create mock service
         EasyMock.expect(mockService.createTranscription(EasyMock.anyObject(CreateTranscriptionRequest.class), EasyMock.eq(audioFile)))
                 .andReturn(mockResult);
 
         EasyMock.replay(mockService, mockResult);
+
+        AudioTxt audioTxt = new AudioTxt(mockService); // Assuming constructor accepts OpenAiService
 
         // Act
         String actualTranscription = audioTxt.transcribeAudio();
@@ -86,22 +91,38 @@ class MainTest {
         String expectedChatResponse = "I am fine, thank you!";
         String expectedAudioFilePath = "src/speechMerge2.mp3";
 
-        List<ChatCompletionChoice> mockChoices = new ArrayList<>();
-        ChatCompletionChoice choice = EasyMock.createMock(ChatCompletionChoice.class);
+        // Mocking ChatCompletionChoice
+        ChatCompletionChoice choice = EasyMock.mock(ChatCompletionChoice.class);
         EasyMock.expect(choice.getMessage()).andReturn(new ChatMessage("assistant", expectedChatResponse)).anyTimes();
+
+        List<ChatCompletionChoice> mockChoices = new ArrayList<>();
         mockChoices.add(choice);
 
-        EasyMock.expect(mockService.createChatCompletion(EasyMock.anyObject(ChatCompletionRequest.class)))
-                .andReturn(() -> mockChoices);
+        // Mocking ChatCompletionResult
+        ChatCompletionResult mockChatCompletionResult = EasyMock.mock(ChatCompletionResult.class);
+        EasyMock.expect(mockChatCompletionResult.getChoices()).andReturn(mockChoices).anyTimes();
 
-        ResponseBody mockResponseBody = EasyMock.createMock(ResponseBody.class);
+        // Mocking OpenAiService
+        OpenAiService mockService = EasyMock.mock(OpenAiService.class);
+        EasyMock.expect(mockService.createChatCompletion(EasyMock.anyObject(ChatCompletionRequest.class)))
+                .andReturn(mockChatCompletionResult);
+
+        // Mocking ResponseBody
+        ResponseBody mockResponseBody = EasyMock.mock(ResponseBody.class);
         InputStream inputStream = new ByteArrayInputStream(new byte[0]);
         EasyMock.expect(mockResponseBody.byteStream()).andReturn(inputStream);
 
+        // Creating a mock call for createSpeech
+        Call<ResponseBody> mockCall = EasyMock.mock(Call.class);
+        EasyMock.expect(mockCall.execute()).andReturn(Response.success(mockResponseBody));
         EasyMock.expect(mockService.createSpeech(EasyMock.anyObject(CreateSpeechRequest.class)))
-                .andReturn(mockResponseBody);
+                .andReturn(mockCall);
 
-        EasyMock.replay(mockService, choice, mockResponseBody);
+        // Putting mocks into replay mode
+        EasyMock.replay(choice, mockChatCompletionResult, mockService, mockResponseBody, mockCall);
+
+        // Creating instance of TxtAudio
+        TxtAudio txtAudio = new TxtAudio(mockService);
 
         // Act
         String actualFilePath = txtAudio.handleChatAndSpeech(transcribedText);
@@ -110,7 +131,7 @@ class MainTest {
         assertEquals(expectedAudioFilePath, actualFilePath);
 
         // Verify the interactions
-        EasyMock.verify(mockService, choice, mockResponseBody);
+        EasyMock.verify(choice, mockChatCompletionResult, mockService, mockResponseBody, mockCall);
     }
 
     @Test
@@ -130,6 +151,8 @@ class MainTest {
         EasyMock.expectLastCall().once();
 
         EasyMock.replay(fisMock, playerMock);
+
+        TxtAudio txtAudio = new TxtAudio(null); // Assuming constructor accepts OpenAiService
 
         // Act
         txtAudio.playAudioFile(filePath);
@@ -154,6 +177,7 @@ class MainTest {
         EasyMock.expect(mockImage.getUrl()).andReturn(imageUrl).anyTimes();
         mockImages.add(mockImage);
 
+        OpenAiService mockService = EasyMock.createMock(OpenAiService.class); // Create mock service
         EasyMock.expect(mockService.createImage(EasyMock.anyObject(CreateImageRequest.class)))
                 .andReturn(() -> mockImages);
 
@@ -170,6 +194,8 @@ class MainTest {
         EasyMock.expect(clientMock.newCall(requestMock).execute()).andReturn(responseMock);
 
         EasyMock.replay(mockService, mockImage, responseMock, responseBodyMock, clientMock);
+
+        ImageGPT imageGPT = new ImageGPT(mockService); // Assuming constructor accepts OpenAiService
 
         // Act
         imageGPT.createAndDownloadImage(prompt);
