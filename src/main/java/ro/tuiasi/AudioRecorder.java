@@ -59,6 +59,11 @@ public class AudioRecorder {
     public void startRecording(String filename) {
         recordingThread = new Thread(() -> {
             try {
+                File audioRec = new File("..\\PipProject\\AudioRecord.wav");
+
+                if (audioRec.exists())
+                    audioRec.delete();
+
                 microphone.start();
                 Thread.sleep(500); // Wait for 0.5 seconds before starting to record
                 System.out.println("You can speak now.");

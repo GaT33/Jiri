@@ -4,8 +4,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.TargetDataLine;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

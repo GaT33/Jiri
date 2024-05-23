@@ -30,7 +30,7 @@ public class GUI {
     /**
      * Used for showing errors to user.
      */
-    JLabel errorLabel;
+    private JLabel errorLabel;
 
     /**
      * Constructs the GUI and initializes the components.
@@ -46,6 +46,10 @@ public class GUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLayout(new BorderLayout());
+
+        // Set custom icon
+        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("Jiri_Icon.png"));
+        frame.setIconImage(icon);
 
         // Custom panel with gradient background
         JPanel gradientPanel = new JPanel() {
@@ -109,7 +113,7 @@ public class GUI {
             isClicked = true;
             if (validateFields(keyTextField, emailTextField, passwordField)) {
                 frame.setVisible(false);
-                Main.service=new OpenAiService(keyTextField.getText());
+                Main.service = new OpenAiService(keyTextField.getText());
                 new InterfataChat();
             }
         });
@@ -218,20 +222,26 @@ public class GUI {
 
             @Override
             protected void paintBorder(Graphics g) {
+                boolean needsRepaint = false;
+
                 if (isClicked && !isKeyValid(getText())) {
                     g.setColor(new Color(255, 0, 0));
                     g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
-                    repaint();
+                    needsRepaint = true;
                 } else if (isClicked && isKeyValid(getText())) {
                     g.setColor(new Color(0, 255, 0));
                     g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
-                    repaint();
+                    needsRepaint = true;
                 } else if (isFocused) {
                     g.setColor(new Color(3, 161, 252));
                     g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
-                    repaint();
+                    needsRepaint = true;
                 } else {
                     g.setColor(new Color(70, 22, 74));
+                    repaint();
+                }
+
+                if (needsRepaint) {
                     repaint();
                 }
             }
@@ -526,7 +536,7 @@ public class GUI {
     private void addListeners(final JLabel gitHubLabel) {
         gitHubLabel.addMouseListener(new MouseAdapter() {
             public void mouseClicked(final MouseEvent e) {
-                openWebPage("https://github.com/");
+                openWebPage("https://github.com/GaT33/Jiri");
             }
         });
     }

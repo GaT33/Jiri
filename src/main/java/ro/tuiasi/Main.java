@@ -8,11 +8,10 @@ public class Main {
     public static OpenAiService service = new OpenAiService("");
 
     public static void main(String[] args) {
-
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new InterfataChat();
+                new GUI();
             }
         });
     }

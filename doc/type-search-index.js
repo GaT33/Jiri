@@ -1,1 +1,1 @@
-typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"ro.tuiasi","l":"GUI"},{"p":"ro.tuiasi","l":"InterfataChat"}];updateSearchResults();
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"ro.tuiasi","l":"Audio2Text"},{"p":"ro.tuiasi","l":"AudioRecorder"},{"p":"ro.tuiasi","l":"GUI"},{"p":"ro.tuiasi","l":"ImageGPT"},{"p":"ro.tuiasi","l":"InterfataChat"},{"p":"ro.tuiasi","l":"Text2Audio"},{"p":"ro.tuiasi","l":"InterfataChat.TextAreaOutputStream"}];updateSearchResults();

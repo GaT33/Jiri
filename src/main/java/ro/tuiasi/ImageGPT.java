@@ -16,14 +16,18 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 /**
- * The ImageGPT class provides functionality for generating and downloading images using the OpenAiService.
+ * The ImageGPT class provides functionality for handling image generation using the OpenAiService.
  */
 public class ImageGPT {
 
-    // Path to store the downloaded image
-    private Path imagePath1 = Paths.get("downloaded_image.jpg");
+    /**
+     * Path to store the downloaded image.
+     */
+    private Path imagePath1 = Paths.get("OpenAIImage.jpg");
 
-    // OpenAiService instance for interacting with OpenAI's API
+    /**
+     * OpenAiService instance for interacting with OpenAI's API.
+     */
     private OpenAiService service;
 
     /**
@@ -44,7 +48,6 @@ public class ImageGPT {
         try {
             // Delete the existing image file, if any
             Files.deleteIfExists(imagePath1);
-            System.out.println("Existing file has been deleted: " + imagePath1.toString());
         } catch (IOException e) {
             System.out.println("An error occurred while deleting the existing file: " + e.getMessage());
         }
@@ -52,9 +55,11 @@ public class ImageGPT {
         // Create a request to generate an image
         CreateImageRequest request = CreateImageRequest.builder()
                 .prompt(prompt)             // Prompt for generating the image
-                .n(1)                       // Number of images to generate
-                .size("1024x1024")          // Size of the image
-                .user("example_user")       // User identifier
+                .model("dall-e-2")          // Model type
+                .n(1)                    // Number of images to generate
+                .quality("standard")        // Quality of image
+                .size("512x512")          // Size of the image
+                .user("end_user")           // User identifier
                 .build();
 
         // Generate the image

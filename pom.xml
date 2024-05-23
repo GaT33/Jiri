@@ -8,8 +8,6 @@
     <artifactId>PipProject</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-
-
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -60,9 +58,15 @@
             <version>0.18.2</version>
         </dependency>
         <dependency>
-            <groupId>com.formdev</groupId>
-            <artifactId>flatlaf</artifactId>
-            <version>3.4.1</version>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.12.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -263,7 +267,5 @@
     </reporting>
 
     <name>PipProject</name>
-    <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
 
 </project>
