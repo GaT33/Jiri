@@ -42,7 +42,7 @@ public class GUI {
             e.printStackTrace();
         }
 
-        JFrame frame = new JFrame("Jiri");
+        JFrame frame = new JFrame("Jiri - Log In");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLayout(new BorderLayout());

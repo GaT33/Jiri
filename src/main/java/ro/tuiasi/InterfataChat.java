@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-import static ro.tuiasi.Text2Audio.truncateTextToFit;
+import static ro.tuiasi.Audio2Text.truncateTextToFit;
 
 /**
  * Class representing the chat interface.
@@ -19,6 +19,14 @@ public class InterfataChat {
      * Constructor for creating the chat interface.
      */
     public InterfataChat() {
+        Text2Audio speechHandlerI = new Text2Audio(Main.service);
+        try {
+            speechHandlerI.handleSpeech("How can I help you?");
+            speechHandlerI.playAudioFile("src/Vocal.mp3");
+        } catch (Exception ex) {
+            System.out.println("Error playing audio file: " + ex.getMessage());
+        }
+
         JFrame frame = new JFrame("Jiri - Menu");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1135, 540);

@@ -55,7 +55,7 @@ public class Text2Audio {
     public String handleChat(String transcribedText) throws IOException {
         // Create chat messages with system response and user input
         List<ChatMessage> messages = new ArrayList<>();
-        messages.add(new ChatMessage("system", "You are a helpful assistant. You are prohibited from using more than 300 characters whenever I ask you something."));
+        messages.add(new ChatMessage("system", "You are a helpful assistant. You are prohibited from using more than 300 characters whenever I talk to you."));
         messages.add(new ChatMessage("user", transcribedText));
 
         // Create a chat completion request to generate a response
@@ -161,79 +161,4 @@ public class Text2Audio {
             isPlaying = false;
         }
     }
-
-    /**
-     * Truncates text to fit within the specified dimensions of a JTextArea.
-     *
-     * @param text The text to be truncated.
-     * @param textArea The JTextArea for calculating dimensions.
-     * @param maxWidth The maximum width allowed.
-     * @param maxHeight The maximum height allowed.
-     * @return The truncated text that fits within the specified dimensions.
-     */
-    public static String truncateTextToFit(String text, JTextArea textArea, int maxWidth, int maxHeight) {
-        text = removeAccents(text);
-
-        // Get the font metrics for the current font of the JTextArea
-        FontMetrics metrics = textArea.getFontMetrics(textArea.getFont());
-
-        int lineHeight = metrics.getHeight();
-        int maxLines = maxHeight / lineHeight;
-
-        // Calculate the maximum number of characters that can fit in a single line
-        int maxCharsPerLine = maxWidth / metrics.charWidth('A'); // A is reference
-
-        StringBuilder truncatedText = new StringBuilder();
-
-        // Split the text into words
-        String[] words = text.split(" ");
-        StringBuilder line = new StringBuilder();
-        int linesCount = 0;
-
-        // Loop through each word in the text
-        for (String word : words) {
-            // Check if adding the word to the current line would exceed the maximum width
-            if (metrics.stringWidth(line.toString() + word) < maxWidth) {
-                // If not, add the word to the current line
-                line.append(word).append(" ");
-            } else {
-                // If it would, check if we have reached the maximum number of lines
-                if (linesCount >= maxLines - 1) {
-                    truncatedText.append(line).append("...");
-                    break;
-                }
-                // Otherwise, append the current line to the truncated text and start a new line
-                truncatedText.append(line).append("\n");
-                line = new StringBuilder(word).append(" ");
-                linesCount++;
-            }
-        }
-
-        // If there is still room for more lines, append the last line
-        if (linesCount < maxLines) {
-            truncatedText.append(line);
-        }
-
-        // Return the truncated text
-        return truncatedText.toString();
-    }
-
-
-    /**
-     * Removes accents from a given text.
-     *
-     * @param text The text from which accents need to be removed.
-     * @return The text without accents.
-     */
-    public static String removeAccents(String text) {
-        // Normalize the text to decompose combined characters into their base characters and combining diacritical marks
-        String normalizedText = Normalizer.normalize(text, Normalizer.Form.NFD);
-
-        // Compile a pattern that matches all diacritical marks
-        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-
-        // Replace all diacritical marks in the normalized text with an empty string, effectively removing them
-        return pattern.matcher(normalizedText).replaceAll("");
-    }
-
 }

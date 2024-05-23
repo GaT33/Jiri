@@ -106,7 +106,7 @@ public class AudioRecorder {
      */
     private boolean isSilent(byte[] buffer, int numBytesRead) {
         double rms = calculateRMS(buffer, numBytesRead);
-        return rms < 15;  // RMS threshold for silence
+        return rms < 150;  // RMS threshold for silence
     }
 
     /**
