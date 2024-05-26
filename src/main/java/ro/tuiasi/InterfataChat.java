@@ -150,6 +150,9 @@ public class InterfataChat {
 
             Audio2Text transcriptionHandler = new Audio2Text(Main.service);
             String transcribedText = transcriptionHandler.transcribeAudio();
+            String trresponsef = truncateTextToFit(transcribedText, transcribed, 250, 105);
+            transcribed.setText(trresponsef);
+
             ImageGPT imageHandler = new ImageGPT(Main.service);
             imageHandler.createAndDownloadImage(transcribedText);
             Image image = new ImageIcon(
